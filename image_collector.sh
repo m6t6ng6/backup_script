@@ -25,12 +25,6 @@ cmd2='dd if=$v2 iflag=fullblock bs=4M status=progress | gzip > "$images_backup_p
 
 eval "$cmd2"
 
-#
-# TESTING DEVELOPMENT
-#
-#
-#
-
 # check for errors
 status2=$?
 
