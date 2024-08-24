@@ -4,14 +4,15 @@ echo image_collector.sh started !! > /dev/kmsg
 
 # variables
 
-DATE=$(date +%b-%d-%Y_%HH%MM)
-IP=$(hostname -f | column -t -s "." | awk '{print $1}')" - "$(ip -4 -br a | grep -i "eth0\|vmbr0" | awk '{print $3}' | column -t -s "/" | awk '{print $1}')
+AUX=$(echo $(date +%b-%d-%Y_%HH%MM)"-ART")
+DATE=${AUX^^}
+IP=$(hostname -f | column -t -s "." | awk '{print $1}')"-"$(ip -4 -br a | grep -i "eth0\|vmbr0" | awk '{print $3}' | column -t -s "/" | awk '{print $1}')
 IMAGE_NAME=$(echo $image_name)
 
 share_path="/mnt/share"
 images_backup_folder="/IMAGES_BACKUP"
 images_backup_path=$(echo $share_path$images_backup_folder)
-image_name=$(echo /$(date +%b-%d-%Y_%HH%MM)_$(echo $IP)"_copy.img.gz")
+image_name=$(echo /$DATE)_$(echo $IP)"_copy.img.gz"
 
 JSON_SUCCESS=$(echo '{ "timestamp": "'"$DATE"'", "source_ip": "'"$IP"'", "country": "BACKUP SUCCESSFUL" }')
 JSON_FAIL=$(echo '{ "timestamp": "'"$DATE"'", "source_ip": "'"$IP"'", "country": "BACKUP FAILED" }')
