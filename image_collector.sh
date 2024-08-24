@@ -16,30 +16,14 @@ image_name=$(echo /$(date +%b-%d-%Y_%HH%MM)_$(echo $IP)"_copy.img.gz")
 JSON_SUCCESS=$(echo '{ "timestamp": "'"$DATE"'", "source_ip": "'"$IP"'", "country": "BACKUP SUCCESSFUL" }')
 JSON_FAIL=$(echo '{ "timestamp": "'"$DATE"'", "source_ip": "'"$IP"'", "country": "BACKUP FAILED" }')
 
-# make sure the share is mounted
-#
-#cmd1='mount -t cifs -o guest,rw,nofail //omv.matanga.it/share /mnt/share'
-#
-#eval $cmd1
-#
-#status1=$?
-#
-#if [ $status1 -ne 0 ];
-#  then
-#    echo "Exit code: $status1 - image_collector.sh failed - ERROR: impossible to mount the network share." > /dev/kmsg
-#    exit 1
-#fi
-
 # find the boot disk
 v1=$(df /boot | grep -Eo '/dev/[^ ]+')
 v2=${v1::-2}
-
 
 # create the image, compress it and redirect it to the share
 cmd2='dd if=$v2 iflag=fullblock bs=4M status=progress | gzip > "$images_backup_path$image_name"'
 
 eval "$cmd2"
-
 
 # check for errors
 status2=$?
