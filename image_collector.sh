@@ -14,8 +14,8 @@ images_backup_folder="/IMAGES_BACKUP"
 images_backup_path=$(echo $share_path$images_backup_folder)
 image_name=$(echo /$DATE)_$(echo $IP)"_copy.img.gz"
 
-JSON_SUCCESS=$(echo '{ "timestamp": "'"$DATE"'", "source_ip": "'"$IP"'", "country": "BACKUP SUCCESSFUL" }')
-JSON_FAIL=$(echo '{ "timestamp": "'"$DATE"'", "source_ip": "'"$IP"'", "country": "BACKUP FAILED" }')
+JSON_SUCCESS=$(echo '{ "timestamp": "'"$DATE"'", "target_system": "'"$IP"'", "cli_message": "BACKUP SUCCESSFUL" }')
+JSON_FAIL=$(echo '{ "timestamp": "'"$DATE"'", "target_system": "'"$IP"'", "cli_message": "BACKUP FAILED" }')
 
 # find the boot disk
 v1=$(df /boot | grep -Eo '/dev/[^ ]+')
@@ -32,8 +32,8 @@ status2=$?
 if [ $status2 -eq 0 ];
   then
     echo "Exit code: $status - image_collector.sh succesfully finished !!" > /dev/kmsg
-    curl -sS -X POST -H "Content-Type: application/json" -d "$(echo $JSON_SUCCESS)" "https://x.matanga.com.ar/post"
+    curl -sS -X POST -H "Content-Type: application/json" -d "$(echo $JSON_SUCCESS)" "https://x.matanga.com.ar/backup_message"
   else
     echo "Exit code: $status - image_collector.sh failed - ERROR: problem creating the image." > /dev/kmsg
-    curl -sS -X POST -H "Content-Type: application/json" -d "$(echo $JSON_FAIL)" "https://x.matanga.com.ar/post"
+    curl -sS -X POST -H "Content-Type: application/json" -d "$(echo $JSON_FAIL)" "https://x.matanga.com.ar/backup_message"
 fi
